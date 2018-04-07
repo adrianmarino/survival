@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{12B42584-3503-0B08-0014-03BD0D689542}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "Suvirval",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
