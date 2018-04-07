@@ -39,7 +39,7 @@ ASuvirvalCharacter::ASuvirvalCharacter()
 	FollowCamera->CreationMethod = EComponentCreationMethod::Native;
 	FollowCamera->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform , TEXT("head"));
 	FollowCamera->bUsePawnControlRotation = true;
-	FollowCamera->RelativeLocation = FVector(5.0f, 18.0f, 0.0f);
+	FollowCamera->RelativeLocation = FVector(5.0f, 19.0f, 0.0f);
 	FollowCamera->RelativeRotation = FRotator(-90.f, 0.0f, 90.0f);
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
