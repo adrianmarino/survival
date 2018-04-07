@@ -32,7 +32,7 @@ ASuvirvalCharacter::ASuvirvalCharacter()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 	GetCharacterMovement()->NavAgentProps.AgentRadius = 42.000000f;
-	GetCharacterMovement()->NavAgentProps.AgentHeight = 192.000000f;
+	GetCharacterMovement()->NavAgentProps.AgentHeight = 100.000000f;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
