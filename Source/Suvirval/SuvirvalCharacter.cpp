@@ -133,6 +133,7 @@ void ASuvirvalCharacter::MoveRight(float Value) {
 void ASuvirvalCharacter::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
+
 	ForwardInput = InputComponent->GetAxisKeyValue("MoveForward");
 	RightInput = InputComponent->GetAxisKeyValue("MoveRight");
 }
