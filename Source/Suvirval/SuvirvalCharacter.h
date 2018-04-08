@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "LogMacros.h"
 #include "SuvirvalCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -18,6 +19,7 @@ class ASuvirvalCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
 public:
 	ASuvirvalCharacter();
 
@@ -28,6 +30,15 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category =  DefProps)
+	float  ForwardInput;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = DefProps)
+	float  RightInput;
+
+	// Called every frame
+	virtual void Tick( float DeltaSeconds ) override;
 
 protected:
 
@@ -69,4 +80,3 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
-

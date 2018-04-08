@@ -12,19 +12,21 @@
 //////////////////////////////////////////////////////////////////////////
 // ASuvirvalCharacter
 
-ASuvirvalCharacter::ASuvirvalCharacter()
-{
+ASuvirvalCharacter::ASuvirvalCharacter() {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
 	// set our turn rates for input
-	BaseTurnRate = 45.f;
-	BaseLookUpRate = 45.f;
+	BaseTurnRate = 25.f;
+	BaseLookUpRate = 25.f;
+	ForwardInput = .0f;
+	RightInput = .0f;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -49,8 +51,7 @@ ASuvirvalCharacter::ASuvirvalCharacter()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ASuvirvalCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
+void ASuvirvalCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
@@ -73,40 +74,36 @@ void ASuvirvalCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ASuvirvalCharacter::OnResetVR);
+	
 }
 
 
-void ASuvirvalCharacter::OnResetVR()
-{
+void ASuvirvalCharacter::OnResetVR() {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void ASuvirvalCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
+void ASuvirvalCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location) {
 		Jump();
 }
 
-void ASuvirvalCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
+void ASuvirvalCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location) {
 		StopJumping();
 }
 
-void ASuvirvalCharacter::TurnAtRate(float Rate)
-{
+void ASuvirvalCharacter::TurnAtRate(float Rate) {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ASuvirvalCharacter::LookUpAtRate(float Rate)
-{
+void ASuvirvalCharacter::LookUpAtRate(float Rate) {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ASuvirvalCharacter::MoveForward(float Value)
-{
-	if ((Controller != NULL) && (Value != 0.0f))
-	{
+void ASuvirvalCharacter::MoveForward(float Value) {
+	ForwardInput = Value;
+
+	if ((Controller != NULL) && (Value != 0.0f)) {
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -117,10 +114,10 @@ void ASuvirvalCharacter::MoveForward(float Value)
 	}
 }
 
-void ASuvirvalCharacter::MoveRight(float Value)
-{
-	if ( (Controller != NULL) && (Value != 0.0f) )
-	{
+void ASuvirvalCharacter::MoveRight(float Value) {
+	RightInput = Value;
+
+	if ( (Controller != NULL) && (Value != 0.0f) ) {
 		// find out which way is right
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
@@ -130,4 +127,12 @@ void ASuvirvalCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+// Called every frame
+void ASuvirvalCharacter::Tick( float DeltaTime )
+{
+	Super::Tick( DeltaTime );
+	ForwardInput = InputComponent->GetAxisKeyValue("MoveForward");
+	RightInput = InputComponent->GetAxisKeyValue("MoveRight");
 }
