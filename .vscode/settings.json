@@ -1,0 +1,13 @@
+{
+	"files.exclude": {
+		"/home/adrian/development/unreal/Suvirval/.codelite": true,
+		"/home/adrian/development/unreal/Suvirval/.git": true,
+		"/home/adrian/development/unreal/Suvirval/.idea": true,
+		"/home/adrian/development/unreal/Suvirval/.kdev4": true,
+		"/home/adrian/development/unreal/Suvirval/.vscode": true,
+		"/home/adrian/development/unreal/Suvirval/Content": true,
+		"/home/adrian/development/unreal/Suvirval/DerivedDataCache": true,
+		"/home/adrian/development/unreal/Suvirval/Intermediate": true,
+		"/home/adrian/development/unreal/Suvirval/Saved": true
+	}
+}

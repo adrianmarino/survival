@@ -7487,6 +7487,8 @@ SOURCES += \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Private/Shaders/ShaderComparisonTests.cpp" \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Private/Slate/RichTextMarkupProcessingTest.cpp" \
 	"$$unrealRootPath/Engine/Plugins/Tests/ScreenshotTools/Source/ScreenshotTools/Private/ScreenshotTools.cpp" \
+	"$$SuvirvalRootPath/Source/Suvirval/DamageItem.cpp" \
+	"$$SuvirvalRootPath/Source/Suvirval/EnergyItem.cpp" \
 	"$$SuvirvalRootPath/Source/Suvirval/Suvirval.cpp" \
 	"$$SuvirvalRootPath/Source/Suvirval/SuvirvalCharacter.cpp" \
 	"$$SuvirvalRootPath/Source/Suvirval/SuvirvalGameMode.cpp" \
