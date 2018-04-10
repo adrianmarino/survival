@@ -22,9 +22,6 @@ ASuvirvalCharacter::ASuvirvalCharacter() {
 	ForwardInput = .0f;
 	RightInput = .0f;
 
-	ArmorLevel = 0;
-	HealthLevel = 1;
-
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -132,7 +129,33 @@ void ASuvirvalCharacter::MoveRight(float Value) {
 }
 
 // Called every frame
-void ASuvirvalCharacter::Tick( float DeltaTime )
-{
+void ASuvirvalCharacter::Tick( float DeltaTime ) {
 	Super::Tick( DeltaTime );
 }
+
+void ASuvirvalCharacter::BeginPlay() {
+    Super::BeginPlay();
+
+	ArmorLevel = 0;
+	HealthLevel = 1;
+
+	GetWorldTimerManager().SetTimer(
+		this->DamageTimer,
+		[this]()  {
+			if(this->HealthLevel == 1 && this->ArmorLevel < 1)  {
+				this->ArmorLevel += 0.002;
+			} else if(this->HealthLevel < 1) {
+				this->HealthLevel += 0.002;
+			}
+			UE_LOG(LogTemp, Verbose, TEXT("Armor: %s - Health: %s"), this->HealthLevel, this->ArmorLevel);
+		},
+		1.0f,
+		true,
+		1.0f
+	);
+}
+
+void ASuvirvalCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	Super::EndPlay(EndPlayReason);
+	GetWorldTimerManager().ClearTimer(this->DamageTimer);
+} 

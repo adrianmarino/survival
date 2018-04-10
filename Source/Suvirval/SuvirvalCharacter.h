@@ -22,6 +22,8 @@ class ASuvirvalCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
 	float HealthLevel;
 
+	FTimerHandle DamageTimer;
+
 public:
 	ASuvirvalCharacter();
 
@@ -41,7 +43,10 @@ public:
 
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
+	
+	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 protected:
 
 	/** Resets HMD orientation in VR. */
