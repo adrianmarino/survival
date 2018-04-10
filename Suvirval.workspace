@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CodeLite_Workspace Name="Suvirval" SWTLW="Yes" Version="10.0.0">
+<CodeLite_Workspace Name="Suvirval" Version="10.0.0" SWTLW="Yes">
   <WorkspaceParserMacros/>
   <WorkspaceParserPaths>
     <Include Path="/opt/UnrealEngine/Engine/Source"/>

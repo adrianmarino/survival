@@ -19,6 +19,10 @@ class ASuvirvalCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+	
+	float ArmorLevel;
+	
+	float EnergyLevel;
 
 public:
 	ASuvirvalCharacter();

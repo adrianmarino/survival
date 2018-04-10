@@ -22,6 +22,9 @@ ASuvirvalCharacter::ASuvirvalCharacter() {
 	ForwardInput = .0f;
 	RightInput = .0f;
 
+	ArmorLevel = 0;
+	EnergyLevel = 1;
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
@@ -74,7 +77,6 @@ void ASuvirvalCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ASuvirvalCharacter::OnResetVR);
-	
 }
 
 
@@ -133,7 +135,4 @@ void ASuvirvalCharacter::MoveRight(float Value) {
 void ASuvirvalCharacter::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
-
-	ForwardInput = InputComponent->GetAxisKeyValue("MoveForward");
-	RightInput = InputComponent->GetAxisKeyValue("MoveRight");
 }
