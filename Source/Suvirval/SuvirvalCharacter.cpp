@@ -23,7 +23,7 @@ ASuvirvalCharacter::ASuvirvalCharacter() {
 	RightInput = .0f;
 
 	ArmorLevel = 0;
-	EnergyLevel = 1;
+	HealthLevel = 1;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
