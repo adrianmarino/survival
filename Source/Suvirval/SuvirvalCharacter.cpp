@@ -137,7 +137,7 @@ void ASuvirvalCharacter::BeginPlay() {
     Super::BeginPlay();
 
 	ArmorLevel = 0;
-	HealthLevel = 1;
+	HealthLevel = 0.5;
 
 	GetWorldTimerManager().SetTimer(
 		this->DamageTimer,
@@ -149,9 +149,9 @@ void ASuvirvalCharacter::BeginPlay() {
 			}
 			UE_LOG(LogTemp, Verbose, TEXT("Armor: %s - Health: %s"), this->HealthLevel, this->ArmorLevel);
 		},
-		1.0f,
+		1,
 		true,
-		1.0f
+		1
 	);
 }
 

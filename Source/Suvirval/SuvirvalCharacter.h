@@ -11,77 +11,90 @@ UCLASS(config=Game)
 class ASuvirvalCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
-	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
-	float ArmorLevel;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
-	float HealthLevel;
-
-	FTimerHandle DamageTimer;
-
-public:
-	ASuvirvalCharacter();
-
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseTurnRate;
-
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	float BaseLookUpRate;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category =  DefProps)
-	float  ForwardInput;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = DefProps)
-	float  RightInput;
-
-	// Called every frame
-	virtual void Tick( float DeltaSeconds ) override;
 	
-	virtual void BeginPlay() override;
+	//-----------------------------------------------------------------------------
+	// Attributes
+	//-----------------------------------------------------------------------------
 
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-protected:
+	public:
+		/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+		float BaseTurnRate;
 
-	/** Resets HMD orientation in VR. */
-	void OnResetVR();
+		/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+		float BaseLookUpRate;
 
-	/** Called for forwards/backward input */
-	void MoveForward(float Value);
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category =  DefProps)
+		float  ForwardInput;
 
-	/** Called for side to side input */
-	void MoveRight(float Value);
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = DefProps)
+		float  RightInput;
 
-	/** 
-	 * Called via input to turn at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void TurnAtRate(float Rate);
+	private:
+		/** Follow camera */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* FollowCamera;
 
-	/**
-	 * Called via input to turn look up/down at a given rate. 
-	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-	 */
-	void LookUpAtRate(float Rate);
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
+		float ArmorLevel;
 
-	/** Handler for when a touch input begins. */
-	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
+		float HealthLevel;
 
-	/** Handler for when a touch input stops. */
-	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+		FTimerHandle DamageTimer;
 
-protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
+	//-----------------------------------------------------------------------------
+	// Constructors
+	//-----------------------------------------------------------------------------
 
-public:
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	public:
+		ASuvirvalCharacter();
+
+	//-----------------------------------------------------------------------------
+	// Methods
+	//-----------------------------------------------------------------------------
+
+	public:
+		virtual void Tick( float DeltaSeconds ) override;
+		
+		virtual void BeginPlay() override;
+
+		virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+		/** Returns FollowCamera subobject **/
+		FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	protected:
+
+		/** Resets HMD orientation in VR. */
+		void OnResetVR();
+
+		/** Called for forwards/backward input */
+		void MoveForward(float Value);
+
+		/** Called for side to side input */
+		void MoveRight(float Value);
+
+		/** 
+		 * Called via input to turn at a given rate. 
+		 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+		 */
+		void TurnAtRate(float Rate);
+
+		/**
+		 * Called via input to turn look up/down at a given rate. 
+		 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+		 */
+		void LookUpAtRate(float Rate);
+
+		/** Handler for when a touch input begins. */
+		void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+
+		/** Handler for when a touch input stops. */
+		void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+		// APawn interface
+		virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+		// End of APawn interface
 };
