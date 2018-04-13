@@ -7,6 +7,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "Screen.h"
 #include "GameFramework/SpringArmComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,27 +136,31 @@ void ASuvirvalCharacter::Tick( float DeltaTime ) {
 
 void ASuvirvalCharacter::BeginPlay() {
     Super::BeginPlay();
-
 	ArmorLevel = 0;
 	HealthLevel = 0.5;
-
 	GetWorldTimerManager().SetTimer(
-		this->DamageTimer,
-		[this]()  {
-			if(this->HealthLevel == 1 && this->ArmorLevel < 1)  {
-				this->ArmorLevel += 0.002;
-			} else if(this->HealthLevel < 1) {
-				this->HealthLevel += 0.002;
-			}
-			UE_LOG(LogTemp, Verbose, TEXT("Armor: %s - Health: %s"), this->HealthLevel, this->ArmorLevel);
-		},
-		1,
-		true,
-		1
+		this->DamageTimer, [this]()  { IncreaseArmor(0.002); IncreaseHealth(0.002); }, 1, true, 1
 	);
 }
 
 void ASuvirvalCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);
 	GetWorldTimerManager().ClearTimer(this->DamageTimer);
-} 
+}
+
+void ASuvirvalCharacter::IncreaseArmor(float Quantity) {
+	if(HealthLevel >= 1) return;
+	ArmorLevel = ArmorLevel + Quantity > 1 ? 1: ArmorLevel + Quantity;
+}
+
+void ASuvirvalCharacter::IncreaseHealth(float Quantity) {
+	HealthLevel = HealthLevel + Quantity > 1 ? 1: HealthLevel + Quantity;
+}
+
+bool ASuvirvalCharacter::ArmorIsFull() {
+	return ArmorLevel == 1;
+}
+bool ASuvirvalCharacter::HealthIsFull() {
+	return HealthLevel == 1;
+}
+

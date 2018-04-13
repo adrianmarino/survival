@@ -16,22 +16,22 @@ class ASuvirvalCharacter : public ACharacter
 	// Attributes
 	//-----------------------------------------------------------------------------
 
-	public:
+	private:
+
 		/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
 		float BaseTurnRate;
 
 		/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
 		float BaseLookUpRate;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category =  DefProps)
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 		float  ForwardInput;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = DefProps)
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 		float  RightInput;
 
-	private:
 		/** Follow camera */
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
@@ -64,6 +64,32 @@ class ASuvirvalCharacter : public ACharacter
 
 		/** Returns FollowCamera subobject **/
 		FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+		UFUNCTION()
+		void OnOverlapBegin(
+			UPrimitiveComponent* OverlappedComp, 
+			AActor* OtherActor, 
+			UPrimitiveComponent* OtherComp, 
+			int32 OtherBodyIndex, 
+			bool bFromSweep,
+			const FHitResult& SweepResult
+		);
+
+		UFUNCTION()
+		void OnOverlapEnd(
+			UPrimitiveComponent* OverlappedComp, 
+			AActor* OtherActor, 
+			UPrimitiveComponent* OtherComp, 
+			int32 OtherBodyIndex
+		);
+
+		void IncreaseArmor(float Quantity);
+
+		void IncreaseHealth(float Quantity);
+
+		bool ArmorIsFull();
+
+		bool HealthIsFull();
 
 	protected:
 
