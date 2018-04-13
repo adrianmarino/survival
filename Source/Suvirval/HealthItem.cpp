@@ -27,7 +27,6 @@ UCapsuleComponent* AHealthItem::CreateTriggerCapsule() {
 	Capsule->InitCapsuleSize(100, 100);
 	Capsule->SetCollisionProfileName(TEXT("Trigger"));
 	Capsule->OnComponentBeginOverlap.AddDynamic(this, &AHealthItem::OnOverlapBegin);
-	Capsule->OnComponentEndOverlap.AddDynamic(this, &AHealthItem::OnOverlapEnd);
 	return Capsule;
 }
 
@@ -56,12 +55,4 @@ void AHealthItem::OnOverlapBegin(
 		Character->IncreaseHealth(this->Quantity);
 		this->Destroy();
 	}
-}
-
-void AHealthItem::OnOverlapEnd(
-	class UPrimitiveComponent* OverlappedComp, 
-	class AActor* OtherActor, 
-	class UPrimitiveComponent* OtherComp, 
-	int32 OtherBodyIndex
-) {
 }
