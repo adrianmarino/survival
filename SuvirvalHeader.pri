@@ -9676,7 +9676,10 @@ HEADERS += \
 	"$$unrealRootPath/Engine/Plugins/Tests/RuntimeTests/Source/RuntimeTests/Public/ShaderComparisonTests.h" \
 	"$$unrealRootPath/Engine/Plugins/Tests/ScreenshotTools/Source/ScreenshotTools/Public/ScreenshotTools.h" \
 	"$$SuvirvalRootPath/Source/Suvirval/DamageItem.h" \
-	"$$SuvirvalRootPath/Source/Suvirval/EnergyItem.h" \
+	"$$SuvirvalRootPath/Source/Suvirval/Damaging.h" \
+	"$$SuvirvalRootPath/Source/Suvirval/HealthItem.h" \
+	"$$SuvirvalRootPath/Source/Suvirval/PercentLevel.h" \
+	"$$SuvirvalRootPath/Source/Suvirval/Screen.h" \
 	"$$SuvirvalRootPath/Source/Suvirval/Suvirval.h" \
 	"$$SuvirvalRootPath/Source/Suvirval/SuvirvalCharacter.h" \
 	"$$SuvirvalRootPath/Source/Suvirval/SuvirvalGameMode.h" \

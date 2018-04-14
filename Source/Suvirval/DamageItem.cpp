@@ -1,28 +1,51 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "DamageItem.h"
+#include "Damaging.h"
+#include "Screen.h"
 
-
-// Sets default values
 ADamageItem::ADamageItem()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	TriggerCapsule = CreateTriggerCapsule(TEXT("DamageTriggerCapsule"), TEXT("DamageTrigger"), 50, 50);
+
+	TriggerCapsule->SetupAttachment(RootComponent);
+	RootComponent = TriggerCapsule; 
+
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DamageMesh"));
+	Mesh->SetupAttachment(TriggerCapsule);
+
+	RotationRate = FRotator(0, 180, 0);
+
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
-void ADamageItem::BeginPlay()
-{
-	Super::BeginPlay();
-	
+UCapsuleComponent* ADamageItem::CreateTriggerCapsule(
+	FName SubobjectName, 
+	FName InCollisionProfileName, 
+	float InRadius, 
+	float InHalfHeight
+) {
+	auto Capsule = CreateDefaultSubobject<UCapsuleComponent>(SubobjectName);
+	Capsule->InitCapsuleSize(InRadius, InHalfHeight);
+	Capsule->SetCollisionProfileName(InCollisionProfileName);
+	Capsule->OnComponentBeginOverlap.AddDynamic(this, &ADamageItem::OnOverlapBegin);
+	return Capsule;
 }
 
-// Called every frame
-void ADamageItem::Tick(float DeltaTime)
-{
+void ADamageItem::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
+	this->AddActorLocalRotation(RotationRate * DeltaTime);
 }
 
+void ADamageItem::OnOverlapBegin(
+	class UPrimitiveComponent* OverlappedComp, 
+	class AActor* OtherActor, 
+	class UPrimitiveComponent* OtherComp, 
+	int32 OtherBodyIndex, 
+	bool bFromSweep, 
+	const FHitResult& SweepResult
+) {
+	IDamaging* damaging = Cast<IDamaging>(OtherActor);
+	if(damaging && !damaging->LifeIsZero()) {
+		Screen::Message(TEXT("Apply Damage!"));
+		damaging->Damage(Quantity);
+	}
+}

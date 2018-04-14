@@ -8,6 +8,8 @@
 		"/home/adrian/development/unreal/Suvirval/Content": true,
 		"/home/adrian/development/unreal/Suvirval/DerivedDataCache": true,
 		"/home/adrian/development/unreal/Suvirval/Intermediate": true,
-		"/home/adrian/development/unreal/Suvirval/Saved": true
+		"/home/adrian/development/unreal/Suvirval/Saved": true,
+		"/home/adrian/development/unreal/Suvirval/build": true,
+		"/home/adrian/development/unreal/Suvirval/cmake-build-debug": true
 	}
 }

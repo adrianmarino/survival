@@ -1,33 +1,51 @@
-// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
-
 #include "SuvirvalCharacter.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
-#include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "Components/InputComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/Controller.h"
 #include "Screen.h"
-#include "GameFramework/SpringArmComponent.h"
 
-//////////////////////////////////////////////////////////////////////////
-// ASuvirvalCharacter
+//-----------------------------------------------------------------------------
+// Constructor / Descrutor
+//-----------------------------------------------------------------------------
 
 ASuvirvalCharacter::ASuvirvalCharacter() {
-	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	ForwardInput = .0f;
+	RightInput = .0f;
 
+	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	this->InitializeMovement();
+	this->InitializeCamera();
+
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+ASuvirvalCharacter::~ASuvirvalCharacter() {
+ 	delete Health;
+	delete Armor;
+}
+
+//-----------------------------------------------------------------------------
+// Methods
+//-----------------------------------------------------------------------------
+
+void ASuvirvalCharacter::InitializeLevels() {
+	Health = new PercentLevel(InitialHealth);
+	Armor = new PercentLevel(InitialArmor);
+
+	Armor->SetIncreaseCondition([&] { return this->Health->IsFull(); });
+	Armor->SetDecreaseCondition([&] { return this->Health->IsFull(); });
+
+	Health->SetIncreaseCondition([&] { return this->Armor->IsZero(); });
+	Health->SetDecreaseCondition([&] { return this->Armor->IsZero(); });
+}
+
+void ASuvirvalCharacter::InitializeMovement() {
 	// set our turn rates for input
 	BaseTurnRate = 25.f;
 	BaseLookUpRate = 25.f;
-	ForwardInput = .0f;
-	RightInput = .0f;
+
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationRoll = false;
-	PrimaryActorTick.bCanEverTick = true;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -36,7 +54,9 @@ ASuvirvalCharacter::ASuvirvalCharacter() {
 	GetCharacterMovement()->AirControl = 0.2f;
 	GetCharacterMovement()->NavAgentProps.AgentRadius = 42.000000f;
 	GetCharacterMovement()->NavAgentProps.AgentHeight = 100.000000f;
+}
 
+void ASuvirvalCharacter::InitializeCamera() {
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->CreationMethod = EComponentCreationMethod::Native;
@@ -44,13 +64,7 @@ ASuvirvalCharacter::ASuvirvalCharacter() {
 	FollowCamera->bUsePawnControlRotation = true;
 	FollowCamera->RelativeLocation = FVector(5.0f, 19.0f, 0.0f);
 	FollowCamera->RelativeRotation = FRotator(-90.f, 0.0f, 90.0f);
-
-	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
-	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Input
 
 void ASuvirvalCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
 	// Set up gameplay key bindings
@@ -83,11 +97,11 @@ void ASuvirvalCharacter::OnResetVR() {
 }
 
 void ASuvirvalCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location) {
-		Jump();
+	Jump();
 }
 
 void ASuvirvalCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location) {
-		StopJumping();
+	StopJumping();
 }
 
 void ASuvirvalCharacter::TurnAtRate(float Rate) {
@@ -131,15 +145,22 @@ void ASuvirvalCharacter::MoveRight(float Value) {
 
 // Called every frame
 void ASuvirvalCharacter::Tick( float DeltaTime ) {
-	Super::Tick( DeltaTime );
+	Super::Tick(DeltaTime);
 }
 
 void ASuvirvalCharacter::BeginPlay() {
     Super::BeginPlay();
-	ArmorLevel = 0;
-	HealthLevel = 0.5;
+	this->InitializeLevels();
 	GetWorldTimerManager().SetTimer(
-		this->DamageTimer, [this]()  { IncreaseArmor(0.002); IncreaseHealth(0.002); }, 1, true, 1
+		this->DamageTimer,
+		[&]() {
+			this->Armor->Increase();
+			this->Health->Increase();
+			Screen::ShowDamage(this->Health, this->Armor);
+		},
+		ONE_SECOND,
+		LOOP_TIMER, 
+		ONE_SECOND
 	);
 }
 
@@ -148,19 +169,25 @@ void ASuvirvalCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	GetWorldTimerManager().ClearTimer(this->DamageTimer);
 }
 
-void ASuvirvalCharacter::IncreaseArmor(float Quantity) {
-	if(HealthLevel >= 1) return;
-	ArmorLevel = ArmorLevel + Quantity > 1 ? 1: ArmorLevel + Quantity;
+bool ASuvirvalCharacter::LifeIsZero() {
+	return Armor->IsZero() && Health->IsZero();
 }
 
-void ASuvirvalCharacter::IncreaseHealth(float Quantity) {
-	HealthLevel = HealthLevel + Quantity > 1 ? 1: HealthLevel + Quantity;
+void ASuvirvalCharacter::Damage(float Quantity) {
+	Armor->Drecrease(Quantity);
+	Health->Drecrease(Quantity);
 }
 
-bool ASuvirvalCharacter::ArmorIsFull() {
-	return ArmorLevel == 1;
-}
-bool ASuvirvalCharacter::HealthIsFull() {
-	return HealthLevel == 1;
-}
+void ASuvirvalCharacter::IncreaseArmor(float Quantity) { Armor->Increase(Quantity); }
+
+void ASuvirvalCharacter::IncreaseHealth(float Quantity) { Health->Increase(Quantity); }
+
+bool ASuvirvalCharacter::ArmorIsFull() { return Armor->IsFull(); }
+
+bool ASuvirvalCharacter::HealthIsFull() { return Health->IsFull(); }
+
+float ASuvirvalCharacter::GetCurrentArmor() { return Armor->GetValue(); }
+
+float ASuvirvalCharacter::GetCurrentHealth() { return Health->GetValue(); }
+
 

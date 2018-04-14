@@ -1,17 +1,33 @@
-// Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "LogMacros.h"
+#include "PercentLevel.h"
+#include "HeadMountedDisplayFunctionLibrary.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/InputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Damaging.h"
 #include "SuvirvalCharacter.generated.h"
 
+
 UCLASS(config=Game)
-class ASuvirvalCharacter : public ACharacter
+class ASuvirvalCharacter : public ACharacter, public IDamaging
 {
 	GENERATED_BODY()
-	
+
+	//-----------------------------------------------------------------------------
+	// Constants
+	//-----------------------------------------------------------------------------
+
+	private:
+		const bool 	LOOP_TIMER = true;
+		const float ONE_SECOND = 1.0f;
+
 	//-----------------------------------------------------------------------------
 	// Attributes
 	//-----------------------------------------------------------------------------
@@ -36,20 +52,35 @@ class ASuvirvalCharacter : public ACharacter
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
-		float ArmorLevel;
+		UPROPERTY(
+			EditAnywhere, 
+			BlueprintReadWrite, 
+			Category = "Damage System", 
+			meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
+		)
+		float InitialArmor;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "DamageSystem", meta = (AllowPrivateAccess = "true"))
-		float HealthLevel;
+		UPROPERTY(
+			EditAnywhere, 
+			BlueprintReadWrite, 
+			Category = "Damage System", 
+			meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
+		)
+		float InitialHealth;
+
+		PercentLevel* Armor;
+
+		PercentLevel* Health;
 
 		FTimerHandle DamageTimer;
 
 	//-----------------------------------------------------------------------------
-	// Constructors
+	// Constructors / Destructor
 	//-----------------------------------------------------------------------------
 
 	public:
 		ASuvirvalCharacter();
+		~ASuvirvalCharacter();
 
 	//-----------------------------------------------------------------------------
 	// Methods
@@ -83,13 +114,23 @@ class ASuvirvalCharacter : public ACharacter
 			int32 OtherBodyIndex
 		);
 
-		void IncreaseArmor(float Quantity);
+		virtual void Damage(float Quantity) override;
 
-		void IncreaseHealth(float Quantity);
+		virtual void IncreaseArmor(float Quantity) override;
 
-		bool ArmorIsFull();
+		virtual void IncreaseHealth(float Quantity) override;
+		
+		virtual bool LifeIsZero() override;
 
-		bool HealthIsFull();
+		virtual bool ArmorIsFull() override;
+
+		virtual bool HealthIsFull() override;
+
+		UFUNCTION(BlueprintPure, Category="Damage System")
+		virtual float GetCurrentArmor() override;
+
+		UFUNCTION(BlueprintPure, Category="Damage System")
+		virtual float GetCurrentHealth() override;
 
 	protected:
 
@@ -123,4 +164,11 @@ class ASuvirvalCharacter : public ACharacter
 		// APawn interface
 		virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 		// End of APawn interface
+	
+	private:
+		void InitializeLevels();
+
+		void InitializeMovement();
+		
+		void InitializeCamera();
 };

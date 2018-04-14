@@ -1,0 +1,30 @@
+/opt/clion/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/adrian/development/unreal/Suvirval
+-- The C compiler identification is GNU 7.3.1
+-- The CXX compiler identification is GNU 7.3.1
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+CMake Error at CMakeLists.txt:216 (add_executable):
+  Cannot find source file:
+
+    /home/adrian/development/unreal/Suvirval/Source/Suvirval/EnergyItem.h
+
+  Tried extensions .c .C .c++ .cc .cpp .cxx .m .M .mm .h .hh .h++ .hm .hpp
+  .hxx .in .txx
+
+
+CMake Error: CMake can not determine linker language for target: FakeTarget
+CMake Error: Cannot determine link language for target "FakeTarget".
+-- Generating done
+-- Build files have been written to: /home/adrian/development/unreal/Suvirval/cmake-build-debug
+Unable to determine product file path for target FakeTarget. Running and debugging will be unavailable.

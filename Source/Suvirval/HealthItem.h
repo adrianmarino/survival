@@ -1,12 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/CapsuleComponent.h"
-#include "SuvirvalCharacter.h"
-#include "Screen.h"
 #include "HealthItem.generated.h"
 
 UCLASS()
@@ -19,25 +15,28 @@ class SUVIRVAL_API AHealthItem : public AActor
 	//-----------------------------------------------------------------------------
 
 	protected:
-	
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Propeties", meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage System", meta = (AllowPrivateAccess = "true"))
 		FRotator RotationRate;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Propeties", meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage System", meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* Mesh;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Trigger Capsule", meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Damage System", meta = (AllowPrivateAccess = "true"))
 		class UCapsuleComponent* TriggerCapsule;
 		
-		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Property", meta = (AllowPrivateAccess = "true"))
+		UPROPERTY(
+			EditAnywhere, 
+			BlueprintReadWrite, 
+			Category = "Damage System", 
+			meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
+		)
 		float Quantity;
 
 	//-----------------------------------------------------------------------------
 	// Constructor
 	//-----------------------------------------------------------------------------
-		
+
 	public:	
-		// Sets default values for this actor's properties
 		AHealthItem();
 
 	//-----------------------------------------------------------------------------
@@ -45,7 +44,6 @@ class SUVIRVAL_API AHealthItem : public AActor
 	//-----------------------------------------------------------------------------
 
 	public:	
-		// Called every frame
 		virtual void Tick(float DeltaTime) override;
 
 		UFUNCTION()
@@ -58,10 +56,11 @@ class SUVIRVAL_API AHealthItem : public AActor
 			const FHitResult& SweepResult
 		);
 
-	protected:
-		// Called when the game starts or when spawned
-		virtual void BeginPlay() override;
-
 	private:
-		UCapsuleComponent* CreateTriggerCapsule();
+		UCapsuleComponent* CreateTriggerCapsule(
+			FName SubobjectName, 
+			FName InCollisionProfileName, 
+			float InRadius, 
+			float InHalfHeight
+		);
 };
