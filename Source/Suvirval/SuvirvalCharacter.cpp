@@ -89,18 +89,11 @@ void ASuvirvalCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &ASuvirvalCharacter::OnResetVR);
 }
 
+void ASuvirvalCharacter::OnResetVR() { UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition(); }
 
-void ASuvirvalCharacter::OnResetVR() {
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
+void ASuvirvalCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location) { Jump(); }
 
-void ASuvirvalCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location) {
-	Jump();
-}
-
-void ASuvirvalCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location) {
-	StopJumping();
-}
+void ASuvirvalCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location) { StopJumping(); }
 
 void ASuvirvalCharacter::TurnAtRate(float Rate) {
 	// calculate delta for this frame from the rate information
@@ -147,9 +140,8 @@ void ASuvirvalCharacter::BeginPlay() {
 	GetWorldTimerManager().SetTimer(
 		this->DamageTimer,
 		[&]() {
-			this->Armor->Increase();
-			this->Health->Increase();
-			Screen::ShowDamage(this->Health, this->Armor);
+			Armor->Increase();
+			Health->Increase();
 		},
 		ONE_SECOND,
 		LOOP_TIMER, 
@@ -162,9 +154,7 @@ void ASuvirvalCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	GetWorldTimerManager().ClearTimer(this->DamageTimer);
 }
 
-bool ASuvirvalCharacter::LifeIsZero() {
-	return Armor->IsZero() && Health->IsZero();
-}
+bool ASuvirvalCharacter::LifeIsZero() { return Armor->IsZero() && Health->IsZero(); }
 
 void ASuvirvalCharacter::Damage(float Quantity) {
 	Armor->Drecrease(Quantity);
