@@ -12,8 +12,6 @@ ASuvirvalCharacter::ASuvirvalCharacter() {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	this->InitializeMovement();
 	this->InitializeCamera();
-
-	PrimaryActorTick.bCanEverTick = true;
 }
 
 ASuvirvalCharacter::~ASuvirvalCharacter() {
@@ -141,11 +139,6 @@ void ASuvirvalCharacter::MoveRight(float Value) {
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
-}
-
-// Called every frame
-void ASuvirvalCharacter::Tick( float DeltaTime ) {
-	Super::Tick(DeltaTime);
 }
 
 void ASuvirvalCharacter::BeginPlay() {
