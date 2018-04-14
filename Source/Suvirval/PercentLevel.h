@@ -40,15 +40,19 @@ class PercentLevel
 		void SetIncreaseCondition(std::function<bool()> Condition);
 		void SetDecreaseCondition(std::function<bool()> Condition);
 
-		void SetValue(float value);
 		float GetValue();
 
 		void Increase();
+		void ForceIncrease();
 		void Increase(float step);
+		void ForceIncrease(float step);
 
 		void Drecrease();
 		void Drecrease(float step);
 
 		bool IsFull();
 		bool IsZero();
+
+	private:
+		void SetValue(float value);
 };

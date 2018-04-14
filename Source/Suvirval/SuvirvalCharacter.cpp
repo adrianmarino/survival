@@ -178,9 +178,9 @@ void ASuvirvalCharacter::Damage(float Quantity) {
 	Health->Drecrease(Quantity);
 }
 
-void ASuvirvalCharacter::IncreaseArmor(float Quantity) { Armor->Increase(Quantity); }
+void ASuvirvalCharacter::IncreaseArmor(float Quantity) { Armor->ForceIncrease(Quantity); }
 
-void ASuvirvalCharacter::IncreaseHealth(float Quantity) { Health->Increase(Quantity); }
+void ASuvirvalCharacter::IncreaseHealth(float Quantity) { Health->ForceIncrease(Quantity); }
 
 bool ASuvirvalCharacter::ArmorIsFull() { return Armor->IsFull(); }
 

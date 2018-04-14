@@ -36,6 +36,10 @@ void PercentLevel::Increase(float step) {
 	}
 }
 
+void PercentLevel::ForceIncrease(float step) { this->SetValue(Value + step); }
+
+void PercentLevel::ForceIncrease() { this->ForceIncrease(DEFAULT_STEP); }
+
 void PercentLevel::Increase() { this->Increase(DEFAULT_STEP); }
 
 void PercentLevel::Drecrease(float step) { 
