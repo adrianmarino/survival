@@ -1,2 +1,3 @@
+#!/bin/zsh
 # make SuvirvalEditor-Linux-DebugGame
 mono /opt/UnrealEngine/Engine/Binaries/DotNET/UnrealBuildTool.exe Suvirval -ModuleWithSuffix=Suvirval,Adrian Linux Development -editorrecompile -canskiplink "/home/adrian/development/unreal/Suvirval/Suvirval.uproject"  -progress
