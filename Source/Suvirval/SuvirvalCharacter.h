@@ -94,24 +94,6 @@ class ASuvirvalCharacter : public ACharacter, public IDamaging
 		/** Returns FollowCamera subobject **/
 		FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-		UFUNCTION()
-		void OnOverlapBegin(
-			UPrimitiveComponent* OverlappedComp, 
-			AActor* OtherActor, 
-			UPrimitiveComponent* OtherComp, 
-			int32 OtherBodyIndex, 
-			bool bFromSweep,
-			const FHitResult& SweepResult
-		);
-
-		UFUNCTION()
-		void OnOverlapEnd(
-			UPrimitiveComponent* OverlappedComp, 
-			AActor* OtherActor, 
-			UPrimitiveComponent* OtherComp, 
-			int32 OtherBodyIndex
-		);
-
 		virtual void Damage(float Quantity) override;
 
 		virtual void IncreaseArmor(float Quantity) override;

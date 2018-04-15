@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CodeLite_Workspace Name="Suvirval" SWTLW="Yes" Version="10.0.0">
+<CodeLite_Workspace Name="Suvirval" Version="10.0.0" SWTLW="Yes">
   <WorkspaceParserMacros/>
   <WorkspaceParserPaths>
     <Include Path="/opt/UnrealEngine/Engine/Source"/>
@@ -4546,7 +4546,7 @@
     <Project Name="UnrealLightmass" Path="Intermediate/ProjectFiles/UnrealLightmass.project" Active="No"/>
     <Project Name="UnrealPak" Path="Intermediate/ProjectFiles/UnrealPak.project" Active="No"/>
     <Project Name="UnrealVersionSelector" Path="Intermediate/ProjectFiles/UnrealVersionSelector.project" Active="No"/>
-    <Project Name="UnrealWatchdog" Path="Intermediate/ProjectFiles/UnrealWatchdog.project" Active="No"/>
+    <Project Name="UnrealWatchdog" Path="Intermediate/ProjectFiles/UnrealWatchdog.project" Active="Yes"/>
     <Project Name="BootstrapPackagedGame" Path="Intermediate/ProjectFiles/BootstrapPackagedGame.project" Active="No"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Game">
