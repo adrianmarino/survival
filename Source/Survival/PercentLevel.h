@@ -47,8 +47,8 @@ class PercentLevel
 		void Increase(float step);
 		void ForceIncrease(float step);
 
-		void Drecrease();
-		void Drecrease(float step);
+		void Decrease();
+		void Decrease(float step);
 
 		bool IsFull();
 		bool IsZero();

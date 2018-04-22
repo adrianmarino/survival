@@ -12,6 +12,9 @@
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Damaging.h"
+#include "Sound/SoundCue.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/AudioComponent.h"
 #include "SurvivalCharacter.generated.h"
 
 
@@ -20,135 +23,156 @@ class ASurvivalCharacter : public ACharacter, public IDamaging
 {
 	GENERATED_BODY()
 
-	//-----------------------------------------------------------------------------
-	// Constants
-	//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Constants
+//-----------------------------------------------------------------------------
 
-	private:
-		const bool 	LOOP_TIMER = true;
-		const float ONE_SECOND = 1.0f;
+private:
+	const bool 	LOOP_TIMER = true;
+	const float ONE_SECOND = 1.0f;
 
-	//-----------------------------------------------------------------------------
-	// Attributes
-	//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Attributes
+//-----------------------------------------------------------------------------
 
-	private:
+private:
 
-		/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
-		float BaseTurnRate;
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseTurnRate;
 
-		/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
-		float BaseLookUpRate;
+	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera, meta = (AllowPrivateAccess = "true"))
+	float BaseLookUpRate;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-		float  ForwardInput;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	float  ForwardInput;
 
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
-		float  RightInput;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	float  RightInput;
 
-		/** Follow camera */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+	/** Follow camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* FollowCamera;
 
-		UPROPERTY(
-			EditAnywhere, 
-			BlueprintReadWrite, 
-			Category = "Damage System", 
-			meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
-		)
-		float InitialArmor;
+	UPROPERTY(
+	    EditAnywhere,
+	    BlueprintReadWrite,
+	    Category = "Damage System",
+	    meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
+	)
+	float InitialArmor;
 
-		UPROPERTY(
-			EditAnywhere, 
-			BlueprintReadWrite, 
-			Category = "Damage System", 
-			meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
-		)
-		float InitialHealth;
+	UPROPERTY(
+	    EditAnywhere,
+	    BlueprintReadWrite,
+	    Category = "Damage System",
+	    meta = (AllowPrivateAccess = "true", ClampMin = "0.0", ClampMax = "1.0")
+	)
+	float InitialHealth;
 
-		PercentLevel* Armor;
+	PercentLevel* Armor;
 
-		PercentLevel* Health;
+	PercentLevel* Health;
 
-		FTimerHandle DamageTimer;
+	FTimerHandle DamageTimer;
 
-	//-----------------------------------------------------------------------------
-	// Constructors / Destructor
-	//-----------------------------------------------------------------------------
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage System", meta = (AllowPrivateAccess = "true"))
+	USoundCue* PainAudioCue;
 
-	public:
-		ASurvivalCharacter();
-		~ASurvivalCharacter();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage System", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* PainAudioComponent;
 
-	//-----------------------------------------------------------------------------
-	// Methods
-	//-----------------------------------------------------------------------------
+	// Reference UMG Asset in the Editor
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage System", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> DamageScreen;
 
-	public:
-		virtual void BeginPlay() override;
+	UUserWidget* DamageScreenWidget;
 
-		virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+//-----------------------------------------------------------------------------
+// Constructors / Destructor
+//-----------------------------------------------------------------------------
 
-		/** Returns FollowCamera subobject **/
-		FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+public:
+	ASurvivalCharacter();
+	~ASurvivalCharacter();
 
-		virtual void Damage(float Quantity) override;
+//-----------------------------------------------------------------------------
+// Methods
+//-----------------------------------------------------------------------------
 
-		virtual void IncreaseArmor(float Quantity) override;
+public:
+	void PostInitializeComponents();
 
-		virtual void IncreaseHealth(float Quantity) override;
-		
-		virtual bool LifeIsZero() override;
+	virtual void BeginPlay() override;
 
-		virtual bool ArmorIsFull() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
-		virtual bool HealthIsFull() override;
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const
+	{
+		return FollowCamera;
+	}
 
-		UFUNCTION(BlueprintPure, Category="Damage System")
-		virtual float GetCurrentArmor() override;
+	virtual void Damage(float Quantity) override;
 
-		UFUNCTION(BlueprintPure, Category="Damage System")
-		virtual float GetCurrentHealth() override;
+	virtual void IncreaseArmor(float Quantity) override;
 
-	protected:
+	virtual void IncreaseHealth(float Quantity) override;
 
-		/** Resets HMD orientation in VR. */
-		void OnResetVR();
+	virtual bool LifeIsZero() override;
 
-		/** Called for forwards/backward input */
-		void MoveForward(float Value);
+	virtual bool ArmorIsFull() override;
 
-		/** Called for side to side input */
-		void MoveRight(float Value);
+	virtual bool HealthIsFull() override;
 
-		/** 
-		 * Called via input to turn at a given rate. 
-		 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-		 */
-		void TurnAtRate(float Rate);
+	UFUNCTION(BlueprintPure, Category="Damage System")
+	virtual float GetCurrentArmor() override;
 
-		/**
-		 * Called via input to turn look up/down at a given rate. 
-		 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
-		 */
-		void LookUpAtRate(float Rate);
+	UFUNCTION(BlueprintPure, Category="Damage System")
+	virtual float GetCurrentHealth() override;
 
-		/** Handler for when a touch input begins. */
-		void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+protected:
 
-		/** Handler for when a touch input stops. */
-		void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+	/** Resets HMD orientation in VR. */
+	void OnResetVR();
 
-		// APawn interface
-		virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-		// End of APawn interface
-	
-	private:
-		void InitializeLevels();
+	/** Called for forwards/backward input */
+	void MoveForward(float Value);
 
-		void InitializeMovement();
-		
-		void InitializeCamera();
+	/** Called for side to side input */
+	void MoveRight(float Value);
+
+	/**
+	 * Called via input to turn at a given rate.
+	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	 */
+	void TurnAtRate(float Rate);
+
+	/**
+	 * Called via input to turn look up/down at a given rate.
+	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
+	 */
+	void LookUpAtRate(float Rate);
+
+	/** Handler for when a touch input begins. */
+	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
+
+	/** Handler for when a touch input stops. */
+	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	// APawn interface
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// End of APawn interface
+
+private:
+	void InitializePainSound();
+
+	void InitializeLevels();
+
+	void InitializeMovement();
+
+	void InitializeCamera();
+
+	void ShowDamageScreen();
 };

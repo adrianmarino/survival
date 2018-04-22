@@ -42,13 +42,13 @@ void PercentLevel::ForceIncrease() { this->ForceIncrease(DEFAULT_STEP); }
 
 void PercentLevel::Increase() { this->Increase(DEFAULT_STEP); }
 
-void PercentLevel::Drecrease(float step) { 
+void PercentLevel::Decrease(float step) {
 	if(DecreaseCondition()) {
 		this->SetValue(Value - step);
 	}
 }
 
-void PercentLevel::Drecrease() { this->Drecrease(DEFAULT_STEP); }
+void PercentLevel::Decrease() { this->Decrease(DEFAULT_STEP); }
 
 bool PercentLevel::IsFull() { return this->Value >= MAX_VALUE; }
 
