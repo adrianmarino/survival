@@ -15,6 +15,7 @@ ASurvivalCharacter::ASurvivalCharacter()
 	this->InitializeMovement();
 	this->InitializeCamera();
 	this->InitializePainSound();
+	this->InitializeLevels();
 }
 
 ASurvivalCharacter::~ASurvivalCharacter()
